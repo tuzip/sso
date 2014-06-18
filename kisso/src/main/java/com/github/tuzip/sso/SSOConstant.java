@@ -37,7 +37,7 @@ public class SSOConstant {
 	public final static boolean SSO_COOKIE_HTTPONLY = true;
 	public final static int SSO_COOKIE_MAXAGE = -1;
 	public final static String SSO_COOKIE_NAME = "uid";
-	public final static String SSO_COOKIE_DOMAIN = ".vko.cn";
+	public final static String SSO_COOKIE_DOMAIN = ".github.com";
 	public final static String SSO_COOKIE_PATH = "/";
 
 	/**
@@ -46,10 +46,10 @@ public class SSOConstant {
 	public final static boolean SSO_COOKIE_BROWSER = true;
 	public final static boolean SSO_COOKIE_CHECKIP = false;
 	public final static boolean SSO_COOKIE_CACHE = false;
-	public final static String SSO_COOKIE_CACHE_NAME = "vko_ssotoken";
+	public final static String SSO_COOKIE_CACHE_NAME = "kisso_ssotoken";
 
 	/**
 	 * 登录相关常量
 	 */
-	public final static String SSO_LOGIN_URL = "sso.vko.cn";
+	public final static String SSO_LOGIN_URL = "sso.github.com";
 }
