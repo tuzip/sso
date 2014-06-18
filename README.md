@@ -28,6 +28,6 @@ Futures
 1、支持模拟登录
 2、支持跨域模拟登录
 
-@copyright
+copyright
 ====================
 Apache License, Version 2.0
