@@ -1,0 +1,9 @@
+com.github.tuzip.sso
+com.github.tuzip.sso.client
+com.github.tuzip.sso.common
+com.github.tuzip.sso.common.encrypt
+com.github.tuzip.sso.common.util
+com.github.tuzip.sso.filter
+com.github.tuzip.sso.waf
+com.github.tuzip.sso.waf.attack
+com.github.tuzip.sso.waf.request
