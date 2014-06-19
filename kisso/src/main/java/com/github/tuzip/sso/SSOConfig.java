@@ -128,13 +128,6 @@ public class SSOConfig {
 	}
 
 	/**
-	 * Cookie 缓存名称
-	 */
-	public static String getCookieCacheName() {
-		return prop.get("sso.cookie.cache.name", SSOConstant.SSO_COOKIE_CACHE_NAME);
-	}
-
-	/**
 	 * SSO 登录地址
 	 */
 	public static String getLoginUrl() {

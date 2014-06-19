@@ -146,10 +146,11 @@ public class SSOHelper {
 	private static SSOToken cacheSSOToken(HttpServletRequest request, Encrypt encrypt, TokenCache cache) {
 		SSOToken token = null;
 		/**
-		 * 判断 SSOToken 是否缓存至 session
+		 * 判断 SSOToken 是否缓存至 Map
+		 * 减少Cookie解密耗时
 		 */
 		if (SSOConfig.getCookieCache() && cache != null) {
-			token = (SSOToken) cache.get(SSOConfig.getCookieCacheName());
+			token = (SSOToken) cache.get(hashCookie(request));
 		}
 
 		/**
@@ -173,7 +174,7 @@ public class SSOHelper {
 				 * 减少解密次数、提高访问速度
 				 */
 				if (SSOConfig.getCookieCache() && cache != null) {
-					cache.set(SSOConfig.getCookieCacheName(), token);
+					cache.set(hashCookie(request), token);
 				}
 			}
 		}
@@ -232,7 +233,7 @@ public class SSOHelper {
 		 * 删除缓存记录
 		 */
 		if (SSOConfig.getCookieCache()) {
-			cache.delete(SSOConfig.getCookieCacheName());
+			cache.delete(hashCookie(request));
 		}
 		/**
 		 * 删除登录 Cookie
@@ -256,5 +257,23 @@ public class SSOHelper {
 
 		//redirect login page
 		response.sendRedirect(HttpUtil.encodeRetURL(SSOConfig.getLoginUrl(), "ReturnURL", retUrl));
+	}
+	
+	/**
+	 * Cookie加密值 Hash
+	 * <p>
+	 * @param request
+	 * @return String
+	 */
+	public static String hashCookie(HttpServletRequest request) {
+		Cookie uid = CookieHelper.findCookieByName(request, SSOConfig.getCookieName());
+		if (uid != null) {
+			/**
+			 * MD5 会重复处理不采用
+			 * 直接返回Cookie加密内容为key
+			 */
+			return uid.getValue();
+		}
+		return null;
 	}
 }

@@ -46,7 +46,6 @@ public class SSOConstant {
 	public final static boolean SSO_COOKIE_BROWSER = true;
 	public final static boolean SSO_COOKIE_CHECKIP = false;
 	public final static boolean SSO_COOKIE_CACHE = false;
-	public final static String SSO_COOKIE_CACHE_NAME = "kisso_ssotoken";
 
 	/**
 	 * 登录相关常量

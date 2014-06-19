@@ -57,8 +57,7 @@ public class TokenCacheMap extends TokenCache {
 	 */
 	@Override
 	public void delete(String key) {
-		//此处清空MAP
-		tokenMap.clear();
+		tokenMap.remove(key);
 	}
-
+	
 }
