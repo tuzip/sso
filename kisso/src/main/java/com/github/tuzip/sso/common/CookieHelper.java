@@ -56,6 +56,17 @@ public class CookieHelper {
 	}
 
 	/**
+	 * 根据 cookieName 清空 Cookie【默认域下】 
+	 * @param response
+	 * @param cookieName
+	 */
+	public static void clearCookieByName(HttpServletResponse response, String cookieName){
+		Cookie cookie = new Cookie(cookieName, "");
+		cookie.setMaxAge(CLEAR_IMMEDIATELY_REMOVE);
+		response.addCookie(cookie);
+	}
+	
+	/**
 	 * @Description 清除指定doamin的所有Cookie
 	 * @param request
 	 * @param response
@@ -71,7 +82,7 @@ public class CookieHelper {
 			String path) {
 		Cookie[] cookies = request.getCookies();
 		for (int i = 0; i < cookies.length; i++) {
-			clearCookie(request, response, cookies[i].getName(), domain, path);
+			clearCookie(response, cookies[i].getName(), domain, path);
 		}
 		logger.info("clearAllCookie in  domain " + domain);
 	}
@@ -93,7 +104,7 @@ public class CookieHelper {
 		boolean result = false;
 		Cookie ck = findCookieByName(request, cookieName);
 		if (ck != null) {
-			result = clearCookie(request, response, cookieName, domain, path);
+			result = clearCookie(response, cookieName, domain, path);
 		}
 		return result;
 	}
@@ -101,7 +112,6 @@ public class CookieHelper {
 	/**
 	 * @Description 清除指定Cookie 等同于 clearCookieByName(...)
 	 * 该方法不判断Cookie是否存在,因此不对外暴露防止Cookie不存在异常.
-	 * @param request
 	 * @param response
 	 * @param cookieName
 	 *            cookie name
@@ -111,7 +121,7 @@ public class CookieHelper {
 	 *            Cookie 路径
 	 * @return boolean
 	 */
-	private static boolean clearCookie(HttpServletRequest request, HttpServletResponse response, String cookieName,
+	private static boolean clearCookie(HttpServletResponse response, String cookieName,
 			String domain, String path) {
 		boolean result = false;
 		try {
