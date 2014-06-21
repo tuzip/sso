@@ -24,7 +24,11 @@ import com.alibaba.fastjson.JSON;
  * @Date	 2014-5-9 	 
  */
 public class Token {
-
+	/**
+	 * 登录 IP
+	 */
+	private String userIp;
+	
 	/**
 	 * Token转为JSON格式
 	 * <p>
@@ -43,5 +47,13 @@ public class Token {
 	 */
 	public Token parseToken(String jsonToken) {
 		return JSON.parseObject(jsonToken, this.getClass());
+	}
+
+	public String getUserIp() {
+		return userIp;
+	}
+
+	public void setUserIp(String userIp) {
+		this.userIp = userIp;
 	}
 }

@@ -28,6 +28,7 @@ import com.github.tuzip.sso.Encrypt;
 import com.github.tuzip.sso.SSOConfig;
 import com.github.tuzip.sso.SSOConstant;
 import com.github.tuzip.sso.SSOToken;
+import com.github.tuzip.sso.Token;
 import com.github.tuzip.sso.TokenCache;
 import com.github.tuzip.sso.TokenCacheMap;
 import com.github.tuzip.sso.common.Browser;
@@ -53,7 +54,7 @@ public class SSOHelper {
 	 * 				对称加密算法类
 	 * @return String 当前Token的json格式值
 	 */
-	public static String getJsonToken(HttpServletRequest request, Encrypt encrypt) {
+	private static String getJsonToken(HttpServletRequest request, Encrypt encrypt) {
 		Cookie uid = CookieHelper.findCookieByName(request, SSOConfig.getCookieName());
 		if (uid != null) {
 			String jsonToken = uid.getValue();
@@ -76,7 +77,7 @@ public class SSOHelper {
 					/**
 					 * 签名验证码失败
 					 */
-					logger.error("SSOHelper getSSOToken, find Browser is illegal.");
+					logger.error("SSOHelper getToken, find Browser is illegal.");
 				}
 			} else {
 				/**
@@ -91,70 +92,60 @@ public class SSOHelper {
 	}
 
 	/**
-	 * 获取当前请求 JsonToken
+	 * 获取当前请求 Token
 	 * <p>
 	 * @param request
-	 * @return String 当前Token的json格式值
+	 * @return 
+	 * @return Token
 	 */
-	public static String getJsonToken(HttpServletRequest request) {
-		return getJsonToken(request, new AES());
+	public static Token getToken(HttpServletRequest request) {
+		return getToken(request, new AES(), new TokenCacheMap());
 	}
 
 	/**
-	 * 获取当前请求 SSOToken
-	 * <p>
-	 * @param request
-	 * @return SSOToken
-	 */
-	public static SSOToken getSSOToken(HttpServletRequest request) {
-		return getSSOToken(request, new AES(), new TokenCacheMap());
-	}
-
-	/**
-	 * 获取当前请求 SSOToken
+	 * 获取当前请求 Token
 	 * <p>
 	 * @param request
 	 * @param encrypt
 	 * 				对称加密算法类
-	 * @return SSOToken
+	 * @return Token
 	 */
-	public static SSOToken getSSOToken(HttpServletRequest request, Encrypt encrypt) {
-		return getSSOToken(request, encrypt, new TokenCacheMap());
+	public static Token getToken(HttpServletRequest request, Encrypt encrypt) {
+		return getToken(request, encrypt, new TokenCacheMap());
 	}
 
 	/**
-	 * 获取当前请求 SSOToken
+	 * 获取当前请求 Token
 	 * <p>
 	 * @param request
 	 * @param encrypt
 	 * 				对称加密算法类
-	 * @return SSOToken
+	 * @return Token
 	 */
-	public static SSOToken getSSOToken(HttpServletRequest request, Encrypt encrypt, TokenCache cache) {
-		SSOToken token = cacheSSOToken(request, encrypt, cache);
-		return checkIp(request, token);
+	public static Token getToken(HttpServletRequest request, Encrypt encrypt, TokenCache cache) {
+		return checkIp(request, cacheToken(request, encrypt, cache));
 	}
 
 	/**
-	 * SSOToken 是否缓存至 session处理逻辑
+	 * Token 是否缓存至 session处理逻辑
 	 * <p>
 	 * @param request
 	 * @param encrypt
 	 * 				对称加密算法类
-	 * @return SSOToken
+	 * @return Token
 	 */
-	private static SSOToken cacheSSOToken(HttpServletRequest request, Encrypt encrypt, TokenCache cache) {
-		SSOToken token = null;
+	private static Token cacheToken(HttpServletRequest request, Encrypt encrypt, TokenCache cache) {
+		Token token = null;
 		/**
-		 * 判断 SSOToken 是否缓存至 Map
+		 * 判断 Token 是否缓存至 Map
 		 * 减少Cookie解密耗时
 		 */
 		if (SSOConfig.getCookieCache() && cache != null) {
-			token = (SSOToken) cache.get(hashCookie(request));
+			token = (Token) cache.get(hashCookie(request));
 		}
 
 		/**
-		 * SSOToken 为 null
+		 * Token 为 null
 		 * 执行以下逻辑
 		 */
 		if (token == null) {
@@ -166,11 +157,39 @@ public class SSOHelper {
 				logger.info("jsonToken is null.");
 				return null;
 			} else {
-				token = new SSOToken();
-				token = (SSOToken) token.parseToken(jsonToken);
+				/**
+				 * 判断是否自定义 Token
+				 * 默认 SSOToken
+				 */
+				if("".equals(SSOConfig.getTokenClass())){
+					token = new SSOToken();
+				} else {
+					try {
+						Class<?> tc = Class.forName(SSOConfig.getTokenClass());
+						try {
+							if(tc.newInstance() instanceof Token) {
+								token = (Token) tc.newInstance();
+							}
+						} catch (InstantiationException e) {
+							e.printStackTrace();
+						} catch (IllegalAccessException e) {
+							e.printStackTrace();
+						}
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+						logger.error("sso.token.class. error..! " + SSOConfig.getTokenClass());
+					}
+					
+					//check token
+					if(token == null){
+						logger.error("token is null for sso.token.class. error..! " + SSOConfig.getTokenClass());
+						return token;
+					}
+				}
+				token = (Token) token.parseToken(jsonToken);
 
 				/**
-				 * 判断 SSOToken 是否缓存至 session
+				 * 判断 Token 是否缓存至 session
 				 * 减少解密次数、提高访问速度
 				 */
 				if (SSOConfig.getCookieCache() && cache != null) {
@@ -187,10 +206,10 @@ public class SSOHelper {
 	 * @param request
 	 * @param token
 	 * 				登录票据
-	 * @return SSOToken
+	 * @return Token
 	 */
 
-	private static SSOToken checkIp(HttpServletRequest request, SSOToken token) {
+	private static Token checkIp(HttpServletRequest request, Token token) {
 		/**
 		 * 判断是否检查 IP 一致性
 		 */
@@ -229,7 +248,7 @@ public class SSOHelper {
 	 */
 	public static boolean logout(HttpServletRequest request, HttpServletResponse response, TokenCache cache) {
 		/**
-		 * SSOToken 如果开启了session缓存
+		 * Token 如果开启了session缓存
 		 * 删除缓存记录
 		 */
 		if (SSOConfig.getCookieCache()) {

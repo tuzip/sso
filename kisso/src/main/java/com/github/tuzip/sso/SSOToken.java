@@ -29,7 +29,6 @@ public class SSOToken extends Token {
 	private final static String DEFAULT_VALUE = "0";//默认参数值
 	private String appId;//应用系统 ID
 	private String userId;//用户 ID
-	private String userIp;//登录 IP
 	private String loginType;//登录类型
 	private long loginTime;//登录时间
 
@@ -39,7 +38,7 @@ public class SSOToken extends Token {
 
 	public SSOToken(HttpServletRequest request) {
 		this.appId = DEFAULT_VALUE;
-		this.userIp = IpHelper.getIpAddr(request);
+		setUserIp(IpHelper.getIpAddr(request));
 		this.loginType = DEFAULT_VALUE;
 		this.loginTime = System.currentTimeMillis();
 	}
@@ -58,14 +57,6 @@ public class SSOToken extends Token {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-	public String getUserIp() {
-		return userIp;
-	}
-
-	public void setUserIp(String userIp) {
-		this.userIp = userIp;
 	}
 
 	public String getLoginType() {

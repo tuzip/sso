@@ -37,7 +37,7 @@ public class SSOConstant {
 	public final static boolean SSO_COOKIE_HTTPONLY = true;
 	public final static int SSO_COOKIE_MAXAGE = -1;
 	public final static String SSO_COOKIE_NAME = "uid";
-	public final static String SSO_COOKIE_DOMAIN = ".github.com";
+	public final static String SSO_COOKIE_DOMAIN = "";
 	public final static String SSO_COOKIE_PATH = "/";
 
 	/**
@@ -46,7 +46,12 @@ public class SSOConstant {
 	public final static boolean SSO_COOKIE_BROWSER = true;
 	public final static boolean SSO_COOKIE_CHECKIP = false;
 	public final static boolean SSO_COOKIE_CACHE = false;
-
+	
+	/**
+	 * 自定义Token Class
+	 */
+	public final static String SSO_TOKEN_CLASS = "";
+	
 	/**
 	 * 登录相关常量
 	 */

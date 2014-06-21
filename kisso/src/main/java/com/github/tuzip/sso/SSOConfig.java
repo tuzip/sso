@@ -128,6 +128,13 @@ public class SSOConfig {
 	}
 
 	/**
+	 * 自定义Token Class
+	 */
+	public static String getTokenClass() {
+		return prop.get("sso.token.class", SSOConstant.SSO_TOKEN_CLASS);
+	}
+	
+	/**
 	 * SSO 登录地址
 	 */
 	public static String getLoginUrl() {

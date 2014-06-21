@@ -65,7 +65,7 @@ public class SSOFilter implements Filter {
 				throw new ServletException("此过滤器只保护HTTP资源");
 			}
 
-			SSOToken token = SSOHelper.getSSOToken(req);
+			SSOToken token = (SSOToken) SSOHelper.getToken(req);
 			if (token == null) {
 				/**
 				 * 重新登录
