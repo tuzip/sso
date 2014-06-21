@@ -27,44 +27,44 @@
     
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<servlet-api.version>2.5</servlet-api.version>
 		<slf4j-api.version>1.7.7</slf4j-api.version>
 		<UserAgentUtils.version>1.2.4</UserAgentUtils.version>
-		<servlet-api.version>2.5</servlet-api.version>
-		<fastjson.version>1.1.40</fastjson.version>
-		<bcprov-jdk14.version>1.48</bcprov-jdk14.version>
+		<bcprov-jdk14.version>1.50</bcprov-jdk14.version>
+		<fastjson.version>1.1.41</fastjson.version>
 	</properties>
 
 	<dependencies>
+		<!-- servlet -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>${servlet-api.version}</version>
+			<scope>provided</scope>
+		</dependency>
 		<!-- slf4j-api -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.7</version>
+			<version>${slf4j-api.version}</version>
 		</dependency>
 		<!-- UserAgentUtils -->
 		<dependency>
 			<groupId>nl.bitwalker</groupId>
 			<artifactId>UserAgentUtils</artifactId>
-			<version>1.2.4</version>
-		</dependency>
-		<!-- servlet -->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
-			<scope>provided</scope>
+			<version>${UserAgentUtils.version}</version>
 		</dependency>
 		<!-- Encryption library -->
 		<dependency>
 		    <groupId>org.bouncycastle</groupId>
 		    <artifactId>bcprov-jdk14</artifactId>
-		    <version>1.50</version>
+		    <version>${bcprov-jdk14.version}</version>
 		</dependency>
 		<!-- json -->
 		<dependency>
 		    <groupId>com.alibaba</groupId>
 		    <artifactId>fastjson</artifactId>
-		    <version>1.1.41</version>
+		    <version>${fastjson.version}</version>
 		</dependency>
 	</dependencies>
 	
