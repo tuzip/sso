@@ -85,12 +85,7 @@ public class LoginHelper {
 					SSOConfig.getSecretKey()));
 			cookie.setPath(SSOConfig.getCookiePath());
 			cookie.setSecure(SSOConfig.getCookieSecure());
-			/**
-			 * Domain不配置设置Cookie当前域
-			 */
-			if("".equals(SSOConfig.getCookieDomain())){
-				cookie.setDomain(SSOConfig.getCookieDomain());
-			}
+			cookie.setDomain(SSOConfig.getCookieDomain());
 			/** 
 			 * 设置Cookie超时时间
 			 */
