@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.tuzip.sso.SSOToken;
+import com.github.tuzip.sso.Token;
 import com.github.tuzip.sso.client.SSOHelper;
 import com.github.tuzip.sso.common.util.HttpUtil;
 
@@ -65,7 +65,7 @@ public class SSOFilter implements Filter {
 				throw new ServletException("此过滤器只保护HTTP资源");
 			}
 
-			SSOToken token = (SSOToken) SSOHelper.getToken(req);
+			Token token = SSOHelper.getToken(req);
 			if (token == null) {
 				/**
 				 * 重新登录

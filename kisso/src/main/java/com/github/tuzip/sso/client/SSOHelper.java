@@ -141,7 +141,7 @@ public class SSOHelper {
 		 * 减少Cookie解密耗时
 		 */
 		if (SSOConfig.getCookieCache() && cache != null) {
-			token = (Token) cache.get(hashCookie(request));
+			token = cache.get(hashCookie(request));
 		}
 
 		/**
@@ -186,7 +186,7 @@ public class SSOHelper {
 						return token;
 					}
 				}
-				token = (Token) token.parseToken(jsonToken);
+				token = token.parseToken(jsonToken);
 
 				/**
 				 * 判断 Token 是否缓存至 session
