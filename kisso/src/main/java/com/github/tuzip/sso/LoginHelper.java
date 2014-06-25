@@ -26,6 +26,7 @@ import com.github.tuzip.sso.common.Browser;
 import com.github.tuzip.sso.common.CookieHelper;
 import com.github.tuzip.sso.common.encrypt.AES;
 import com.github.tuzip.sso.common.util.RandomUtil;
+import com.github.tuzip.sso.exception.KissoException;
 
 /**
  * SSO登录帮助类
@@ -109,6 +110,9 @@ public class LoginHelper {
 	 */
 	public static void setSSOCookie(HttpServletRequest request, HttpServletResponse response, Token token,
 			Encrypt encrypt) {
+		if (encrypt == null) {
+			throw new KissoException(" Encrypt not for null.");
+		}
 		try {
 			Cookie ck = generateCookie(request, token, encrypt);
 			if (SSOConfig.getCookieHttponly()) {

@@ -36,6 +36,7 @@ import com.github.tuzip.sso.common.CookieHelper;
 import com.github.tuzip.sso.common.IpHelper;
 import com.github.tuzip.sso.common.encrypt.AES;
 import com.github.tuzip.sso.common.util.HttpUtil;
+import com.github.tuzip.sso.exception.KissoException;
 
 /**
  * SSO客户端帮助类
@@ -111,6 +112,9 @@ public class SSOHelper {
 	 * @return Token
 	 */
 	public static Token getToken(HttpServletRequest request, Encrypt encrypt) {
+		if (encrypt == null) {
+			throw new KissoException(" Encrypt not for null.");
+		}
 		return getToken(request, encrypt, new TokenCacheMap());
 	}
 
@@ -123,6 +127,9 @@ public class SSOHelper {
 	 * @return Token
 	 */
 	public static Token getToken(HttpServletRequest request, Encrypt encrypt, TokenCache cache) {
+		if (cache == null) {
+			throw new KissoException(" TokenCache not for null.");
+		}
 		return checkIp(request, cacheToken(request, encrypt, cache));
 	}
 
@@ -247,6 +254,9 @@ public class SSOHelper {
 	 * @return boolean <p>true 成功, false 失败</p>
 	 */
 	public static boolean logout(HttpServletRequest request, HttpServletResponse response, TokenCache cache) {
+		if (cache == null) {
+			throw new KissoException(" TokenCache not for null.");
+		}
 		/**
 		 * Token 如果开启了session缓存
 		 * 删除缓存记录
