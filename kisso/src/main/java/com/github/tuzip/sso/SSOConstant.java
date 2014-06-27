@@ -48,9 +48,17 @@ public class SSOConstant {
 	public final static boolean SSO_COOKIE_CACHE = false;
 	
 	/**
+	 * 自定义Encrypt Class
+	 */
+	public final static String SSO_ENCRYPT_CLASS = "";
+	/**
 	 * 自定义Token Class
 	 */
 	public final static String SSO_TOKEN_CLASS = "";
+	/**
+	 * 自定义TokenCache Class
+	 */
+	public final static String SSO_TOKENCACHE_CLASS = "";
 	
 	/**
 	 * 登录相关常量

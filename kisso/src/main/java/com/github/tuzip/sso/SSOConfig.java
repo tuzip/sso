@@ -128,10 +128,24 @@ public class SSOConfig {
 	}
 
 	/**
+	 * 自定义Encrypt Class
+	 */
+	public static String getEncryptClass() {
+		return prop.get("sso.encrypt.class", SSOConstant.SSO_ENCRYPT_CLASS);
+	}
+	
+	/**
 	 * 自定义Token Class
 	 */
 	public static String getTokenClass() {
 		return prop.get("sso.token.class", SSOConstant.SSO_TOKEN_CLASS);
+	}
+	
+	/**
+	 * 自定义TokenCache Class
+	 */
+	public static String getTokenCacheClass() {
+		return prop.get("sso.tokencache.class", SSOConstant.SSO_TOKENCACHE_CLASS);
 	}
 	
 	/**

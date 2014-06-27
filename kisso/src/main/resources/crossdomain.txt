@@ -16,15 +16,15 @@
 cross_domain 跨域表结构
 -------------------------------------------------------------------------------------
 主键 				id
-业务系统域名 			domain
-SSO私钥				sprk
-SSO公钥				spuk
+业务系统域名 		domain
+SSO私钥			sprk
+SSO公钥			spuk
 业务系统公钥			opuk
-AES密钥 				asek
-校验IP				ip
+AES密钥 			asek
+校验IP			ip
 登录确认地址			certurl
- 更新时间				lastdate
- 创建时间				createdate
+更新时间			lastdate
+创建时间			createdate
 -------------------------------------------------------------------------------------
 
 

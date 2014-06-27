@@ -36,6 +36,7 @@ import com.github.tuzip.sso.common.CookieHelper;
 import com.github.tuzip.sso.common.IpHelper;
 import com.github.tuzip.sso.common.encrypt.AES;
 import com.github.tuzip.sso.common.util.HttpUtil;
+import com.github.tuzip.sso.common.util.ReflectUtil;
 import com.github.tuzip.sso.exception.KissoException;
 
 /**
@@ -100,7 +101,7 @@ public class SSOHelper {
 	 * @return Token
 	 */
 	public static Token getToken(HttpServletRequest request) {
-		return getToken(request, new AES(), new TokenCacheMap());
+		return getToken(request, getEncrypt(), getTokenCache());
 	}
 
 	/**
@@ -111,24 +112,12 @@ public class SSOHelper {
 	 * 				对称加密算法类
 	 * @return Token
 	 */
-	public static Token getToken(HttpServletRequest request, Encrypt encrypt) {
-		if (encrypt == null) {
-			throw new KissoException(" Encrypt not for null.");
-		}
-		return getToken(request, encrypt, new TokenCacheMap());
-	}
-
-	/**
-	 * 获取当前请求 Token
-	 * <p>
-	 * @param request
-	 * @param encrypt
-	 * 				对称加密算法类
-	 * @return Token
-	 */
-	public static Token getToken(HttpServletRequest request, Encrypt encrypt, TokenCache cache) {
+	private static Token getToken(HttpServletRequest request, Encrypt encrypt, TokenCache cache) {
 		if (cache == null) {
 			throw new KissoException(" TokenCache not for null.");
+		}
+		if (encrypt == null) {
+			throw new KissoException(" Encrypt not for null.");
 		}
 		return checkIp(request, cacheToken(request, encrypt, cache));
 	}
@@ -164,35 +153,7 @@ public class SSOHelper {
 				logger.info("jsonToken is null.");
 				return null;
 			} else {
-				/**
-				 * 判断是否自定义 Token
-				 * 默认 SSOToken
-				 */
-				if("".equals(SSOConfig.getTokenClass())){
-					token = new SSOToken();
-				} else {
-					try {
-						Class<?> tc = Class.forName(SSOConfig.getTokenClass());
-						try {
-							if(tc.newInstance() instanceof Token) {
-								token = (Token) tc.newInstance();
-							}
-						} catch (InstantiationException e) {
-							e.printStackTrace();
-						} catch (IllegalAccessException e) {
-							e.printStackTrace();
-						}
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
-						logger.error("sso.token.class. error..! " + SSOConfig.getTokenClass());
-					}
-					
-					//check token
-					if(token == null){
-						logger.error("token is null for sso.token.class. error..! " + SSOConfig.getTokenClass());
-						return token;
-					}
-				}
+				token = getToken();
 				token = token.parseToken(jsonToken);
 
 				/**
@@ -242,7 +203,7 @@ public class SSOHelper {
 	 * @return boolean <p>true 成功, false 失败</p>
 	 */
 	public static boolean logout(HttpServletRequest request, HttpServletResponse response) {
-		return logout(request, response, new TokenCacheMap());
+		return logout(request, response, getTokenCache());
 	}
 
 	/**
@@ -253,7 +214,7 @@ public class SSOHelper {
 	 * @param TokenCache
 	 * @return boolean <p>true 成功, false 失败</p>
 	 */
-	public static boolean logout(HttpServletRequest request, HttpServletResponse response, TokenCache cache) {
+	private static boolean logout(HttpServletRequest request, HttpServletResponse response, TokenCache cache) {
 		if (cache == null) {
 			throw new KissoException(" TokenCache not for null.");
 		}
@@ -286,6 +247,57 @@ public class SSOHelper {
 
 		//redirect login page
 		response.sendRedirect(HttpUtil.encodeRetURL(SSOConfig.getLoginUrl(), "ReturnURL", retUrl));
+	}
+	
+	/**
+	 * Encrypt
+	 */
+	private static Encrypt getEncrypt() {
+		/**
+		 * 判断是否自定义 Encrypt
+		 * 默认 AES
+		 */
+		Encrypt encrypt = null;
+		if("".equals(SSOConfig.getEncryptClass())){
+			encrypt = new AES();
+		} else {
+			encrypt = ReflectUtil.getConfigEncrypt();
+		}
+		return encrypt;
+	}
+	
+	/**
+	 * Token
+	 */
+	private static Token getToken() {
+		/**
+		 * 判断是否自定义 Token
+		 * 默认 SSOToken
+		 */
+		Token token = null;
+		if("".equals(SSOConfig.getTokenClass())){
+			token = new SSOToken();
+		} else {
+			token = ReflectUtil.getConfigToken();
+		}
+		return token;
+	}
+	
+	/**
+	 * TokenCache
+	 */
+	private static TokenCache getTokenCache() {
+		/**
+		 * 判断是否自定义 TokenCache
+		 * 默认 TokenCacheMap
+		 */
+		TokenCache tokenCache = null;
+		if("".equals(SSOConfig.getTokenClass())){
+			tokenCache = new TokenCacheMap();
+		} else {
+			tokenCache = ReflectUtil.getConfigTokenCache();
+		}
+		return tokenCache;
 	}
 	
 	/**
