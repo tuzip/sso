@@ -24,8 +24,8 @@ import org.slf4j.LoggerFactory;
 
 import com.github.tuzip.sso.common.Browser;
 import com.github.tuzip.sso.common.CookieHelper;
-import com.github.tuzip.sso.common.encrypt.AES;
 import com.github.tuzip.sso.common.util.RandomUtil;
+import com.github.tuzip.sso.common.util.ReflectUtil;
 import com.github.tuzip.sso.exception.KissoException;
 
 /**
@@ -108,7 +108,7 @@ public class LoginHelper {
 	 * @param encrypt
 	 * 				对称加密算法类
 	 */
-	public static void setSSOCookie(HttpServletRequest request, HttpServletResponse response, Token token,
+	private static void setSSOCookie(HttpServletRequest request, HttpServletResponse response, Token token,
 			Encrypt encrypt) {
 		if (encrypt == null) {
 			throw new KissoException(" Encrypt not for null.");
@@ -134,7 +134,7 @@ public class LoginHelper {
 	 * @param response
 	 */
 	public static void setSSOCookie(HttpServletRequest request, HttpServletResponse response, Token token) {
-		setSSOCookie(request, response, token, new AES());
+		setSSOCookie(request, response, token, ReflectUtil.getConfigEncrypt());
 	}
 
 	/**

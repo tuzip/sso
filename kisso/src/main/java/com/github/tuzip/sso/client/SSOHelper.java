@@ -27,14 +27,11 @@ import org.slf4j.LoggerFactory;
 import com.github.tuzip.sso.Encrypt;
 import com.github.tuzip.sso.SSOConfig;
 import com.github.tuzip.sso.SSOConstant;
-import com.github.tuzip.sso.SSOToken;
 import com.github.tuzip.sso.Token;
 import com.github.tuzip.sso.TokenCache;
-import com.github.tuzip.sso.TokenCacheMap;
 import com.github.tuzip.sso.common.Browser;
 import com.github.tuzip.sso.common.CookieHelper;
 import com.github.tuzip.sso.common.IpHelper;
-import com.github.tuzip.sso.common.encrypt.AES;
 import com.github.tuzip.sso.common.util.HttpUtil;
 import com.github.tuzip.sso.common.util.ReflectUtil;
 import com.github.tuzip.sso.exception.KissoException;
@@ -101,7 +98,7 @@ public class SSOHelper {
 	 * @return Token
 	 */
 	public static Token getToken(HttpServletRequest request) {
-		return getToken(request, getEncrypt(), getTokenCache());
+		return getToken(request, ReflectUtil.getConfigEncrypt(), ReflectUtil.getConfigTokenCache());
 	}
 
 	/**
@@ -153,7 +150,7 @@ public class SSOHelper {
 				logger.info("jsonToken is null.");
 				return null;
 			} else {
-				token = getToken();
+				token = ReflectUtil.getConfigToken();
 				token = token.parseToken(jsonToken);
 
 				/**
@@ -203,7 +200,7 @@ public class SSOHelper {
 	 * @return boolean <p>true 成功, false 失败</p>
 	 */
 	public static boolean logout(HttpServletRequest request, HttpServletResponse response) {
-		return logout(request, response, getTokenCache());
+		return logout(request, response, ReflectUtil.getConfigTokenCache());
 	}
 
 	/**
@@ -248,58 +245,7 @@ public class SSOHelper {
 		//redirect login page
 		response.sendRedirect(HttpUtil.encodeRetURL(SSOConfig.getLoginUrl(), "ReturnURL", retUrl));
 	}
-	
-	/**
-	 * Encrypt
-	 */
-	private static Encrypt getEncrypt() {
-		/**
-		 * 判断是否自定义 Encrypt
-		 * 默认 AES
-		 */
-		Encrypt encrypt = null;
-		if("".equals(SSOConfig.getEncryptClass())){
-			encrypt = new AES();
-		} else {
-			encrypt = ReflectUtil.getConfigEncrypt();
-		}
-		return encrypt;
-	}
-	
-	/**
-	 * Token
-	 */
-	private static Token getToken() {
-		/**
-		 * 判断是否自定义 Token
-		 * 默认 SSOToken
-		 */
-		Token token = null;
-		if("".equals(SSOConfig.getTokenClass())){
-			token = new SSOToken();
-		} else {
-			token = ReflectUtil.getConfigToken();
-		}
-		return token;
-	}
-	
-	/**
-	 * TokenCache
-	 */
-	private static TokenCache getTokenCache() {
-		/**
-		 * 判断是否自定义 TokenCache
-		 * 默认 TokenCacheMap
-		 */
-		TokenCache tokenCache = null;
-		if("".equals(SSOConfig.getTokenClass())){
-			tokenCache = new TokenCacheMap();
-		} else {
-			tokenCache = ReflectUtil.getConfigTokenCache();
-		}
-		return tokenCache;
-	}
-	
+
 	/**
 	 * Cookie加密值 Hash
 	 * <p>

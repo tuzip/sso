@@ -20,8 +20,11 @@ import org.slf4j.LoggerFactory;
 
 import com.github.tuzip.sso.Encrypt;
 import com.github.tuzip.sso.SSOConfig;
+import com.github.tuzip.sso.SSOToken;
 import com.github.tuzip.sso.Token;
 import com.github.tuzip.sso.TokenCache;
+import com.github.tuzip.sso.TokenCacheMap;
+import com.github.tuzip.sso.common.encrypt.AES;
 import com.github.tuzip.sso.exception.KissoException;
 
 /**
@@ -38,23 +41,31 @@ public class ReflectUtil {
 	 * @return
 	 */
 	public static Encrypt getConfigEncrypt() {
+		/**
+		 * 判断是否自定义 Encrypt
+		 * 默认 AES
+		 */
 		Encrypt encrypt = null;
-		try {
-			Class<?> tc = Class.forName(SSOConfig.getEncryptClass());
+		if("".equals(SSOConfig.getEncryptClass())){
+			encrypt = new AES();
+		} else {
 			try {
-				if(tc.newInstance() instanceof Encrypt) {
-					encrypt = (Encrypt) tc.newInstance();
-				} else {
-					new KissoException(SSOConfig.getEncryptClass() + " not instanceof Encrypt.");
+				Class<?> tc = Class.forName(SSOConfig.getEncryptClass());
+				try {
+					if(tc.newInstance() instanceof Encrypt) {
+						encrypt = (Encrypt) tc.newInstance();
+					} else {
+						new KissoException(SSOConfig.getEncryptClass() + " not instanceof Encrypt.");
+					}
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
 				}
-			} catch (InstantiationException e) {
+			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
+				logger.error("sso.encrypt.class. error..! " + SSOConfig.getEncryptClass());
 			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			logger.error("sso.encrypt.class. error..! " + SSOConfig.getEncryptClass());
 		}
 		return encrypt;
 	}
@@ -64,23 +75,31 @@ public class ReflectUtil {
 	 * @return
 	 */
 	public static Token getConfigToken() {
+		/**
+		 * 判断是否自定义 Token
+		 * 默认 SSOToken
+		 */
 		Token token = null;
-		try {
-			Class<?> tc = Class.forName(SSOConfig.getTokenClass());
+		if("".equals(SSOConfig.getTokenClass())){
+			token = new SSOToken();
+		} else {
 			try {
-				if(tc.newInstance() instanceof Token) {
-					token = (Token) tc.newInstance();
-				} else {
-					new KissoException(SSOConfig.getTokenClass() + " not instanceof Token.");
+				Class<?> tc = Class.forName(SSOConfig.getTokenClass());
+				try {
+					if(tc.newInstance() instanceof Token) {
+						token = (Token) tc.newInstance();
+					} else {
+						new KissoException(SSOConfig.getTokenClass() + " not instanceof Token.");
+					}
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
 				}
-			} catch (InstantiationException e) {
+			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
+				logger.error("sso.token.class. error..! " + SSOConfig.getTokenClass());
 			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			logger.error("sso.token.class. error..! " + SSOConfig.getTokenClass());
 		}
 		return token;
 	}
@@ -91,23 +110,31 @@ public class ReflectUtil {
 	 * @return
 	 */
 	public static TokenCache getConfigTokenCache() {
+		/**
+		 * 判断是否自定义 TokenCache
+		 * 默认 TokenCacheMap
+		 */
 		TokenCache tokenCache = null;
-		try {
-			Class<?> tc = Class.forName(SSOConfig.getTokenCacheClass());
+		if("".equals(SSOConfig.getTokenClass())){
+			tokenCache = new TokenCacheMap();
+		} else {
 			try {
-				if(tc.newInstance() instanceof TokenCache) {
-					tokenCache = (TokenCache) tc.newInstance();
-				} else {
-					new KissoException(SSOConfig.getTokenCacheClass() + " not instanceof TokenCache.");
+				Class<?> tc = Class.forName(SSOConfig.getTokenCacheClass());
+				try {
+					if(tc.newInstance() instanceof TokenCache) {
+						tokenCache = (TokenCache) tc.newInstance();
+					} else {
+						new KissoException(SSOConfig.getTokenCacheClass() + " not instanceof TokenCache.");
+					}
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
 				}
-			} catch (InstantiationException e) {
+			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
+				logger.error("sso.tokencache.class. error..! " + SSOConfig.getTokenCacheClass());
 			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			logger.error("sso.tokencache.class. error..! " + SSOConfig.getTokenCacheClass());
 		}
 		return tokenCache;
 	}
