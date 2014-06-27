@@ -154,4 +154,18 @@ public class SSOConfig {
 	public static String getLoginUrl() {
 		return prop.get("sso.login.url", SSOConstant.SSO_LOGIN_URL);
 	}
+	
+	/**
+	 * 跨域信任 Cookie 名称
+	 */
+	public static String getAuthCookieName() {
+		return prop.get("sso.crossdomain.cookie.name", SSOConstant.SSO_AUTH_COOKIE_NAME);
+	}
+	
+	/**
+	 * 跨域信任 Cookie 超时时间
+	 */
+	public static int getAuthCookieMaxage() {
+		return prop.getInt("sso.crossdomain.cookie.maxage", SSOConstant.SSO_AUTH_COOKIE_MAXAGE);
+	}
 }

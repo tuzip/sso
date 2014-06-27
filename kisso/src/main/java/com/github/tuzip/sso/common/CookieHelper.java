@@ -37,6 +37,20 @@ public class CookieHelper {
 	public final static int CLEAR_IMMEDIATELY_REMOVE = 0;//立即删除
 
 	/**
+	 * @Description 防止伪造SESSIONID攻击. 
+	 * 				用户登录校验成功销毁当前JSESSIONID.
+	 * 				创建可信的JSESSIONID
+	 * @param request
+	 * 				当前HTTP请求
+	 * @param value
+	 * 				用户ID等唯一信息
+	 */
+	public static void authJSESSIONID(HttpServletRequest request, String value) {
+		request.getSession().invalidate();
+		request.getSession().setAttribute("KISSO-" + value, true);
+	}
+	
+	/**
 	 * @Description 根据cookieName获取Cookie
 	 * @param request
 	 * @param cookieName

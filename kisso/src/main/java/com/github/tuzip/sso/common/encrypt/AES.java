@@ -15,19 +15,16 @@
  */
 package com.github.tuzip.sso.common.encrypt;
 
-import java.security.Security;
-
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.util.encoders.UrlBase64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.tuzip.sso.Encrypt;
 import com.github.tuzip.sso.SSOConfig;
+import com.github.tuzip.sso.common.util.Base64Util;
 
 /**
  * AES encrypt util
@@ -77,7 +74,7 @@ public class AES extends Encrypt {
 			cipher.init(Cipher.ENCRYPT_MODE, getSecretKey());
 			encryptBytes = cipher.doFinal(str.getBytes());
 			if (encryptBytes != null) {
-				encryptStr = encryptBASE64(encryptBytes);
+				encryptStr = Base64Util.encryptBASE64(encryptBytes);
 			}
 		} catch (Exception e) {
 			LOGGER.error("Encrypt encryptAES is exception:", e.getMessage());
@@ -96,7 +93,7 @@ public class AES extends Encrypt {
 		try {
 			Cipher cipher = Cipher.getInstance(ALGORITHM);
 			cipher.init(Cipher.DECRYPT_MODE, getSecretKey());
-			byte[] scrBytes = decryptBASE64(str);
+			byte[] scrBytes = Base64Util.decryptBASE64(str);
 			decryptBytes = cipher.doFinal(scrBytes);
 		} catch (Exception e) {
 			LOGGER.error("Encrypt decryptAES is exception:", e.getMessage());
@@ -105,31 +102,6 @@ public class AES extends Encrypt {
 			decryptStr = new String(decryptBytes);
 		}
 		return decryptStr;
-	}
-
-	/**
-	 * BASE64 encrypt
-	 * 
-	 * @param key
-	 * @return
-	 * @throws Exception
-	 */
-	public static String encryptBASE64(byte[] key) throws Exception {
-		Security.addProvider(new BouncyCastleProvider());
-		byte[] b = UrlBase64.encode(key);
-		return new String(b, SSOConfig.getEncoding());
-	}
-
-	/**
-	 * BASE64 decrypt
-	 * 
-	 * @param key
-	 * @return
-	 * @throws Exception
-	 */
-	public static byte[] decryptBASE64(String key) throws Exception {
-		Security.addProvider(new BouncyCastleProvider());
-		return UrlBase64.decode(key.getBytes(SSOConfig.getEncoding()));
 	}
 
 	/**

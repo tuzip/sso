@@ -16,6 +16,7 @@
 package com.github.tuzip.sso.common.util;
 
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * 随机数工具类
@@ -49,6 +50,14 @@ public class RandomUtil {
 			}
 		}
 		return val;
+	}
+	
+	/**
+	 * 获取去掉"-" UUID
+	 * @return
+	 */
+	public static String get32UUID() {
+		return UUID.randomUUID().toString().replace("-", "");
 	}
 
 }

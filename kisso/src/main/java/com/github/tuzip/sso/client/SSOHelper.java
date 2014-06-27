@@ -25,13 +25,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.tuzip.sso.Encrypt;
+import com.github.tuzip.sso.KissoHelper;
 import com.github.tuzip.sso.SSOConfig;
-import com.github.tuzip.sso.SSOConstant;
 import com.github.tuzip.sso.Token;
 import com.github.tuzip.sso.TokenCache;
-import com.github.tuzip.sso.common.Browser;
 import com.github.tuzip.sso.common.CookieHelper;
-import com.github.tuzip.sso.common.IpHelper;
 import com.github.tuzip.sso.common.util.HttpUtil;
 import com.github.tuzip.sso.common.util.ReflectUtil;
 import com.github.tuzip.sso.exception.KissoException;
@@ -44,51 +42,6 @@ import com.github.tuzip.sso.exception.KissoException;
  */
 public class SSOHelper {
 	private final static Logger logger = LoggerFactory.getLogger(SSOHelper.class);
-
-	/**
-	 * 获取当前请求 JsonToken
-	 * <p>
-	 * @param request
-	 * @param encrypt
-	 * 				对称加密算法类
-	 * @return String 当前Token的json格式值
-	 */
-	private static String getJsonToken(HttpServletRequest request, Encrypt encrypt) {
-		Cookie uid = CookieHelper.findCookieByName(request, SSOConfig.getCookieName());
-		if (uid != null) {
-			String jsonToken = uid.getValue();
-			String[] tokenAttr = new String[2];
-			try {
-				jsonToken = encrypt.decrypt(jsonToken, SSOConfig.getSecretKey());
-				tokenAttr = jsonToken.split(SSOConstant.CUT_SYMBOL);
-			} catch (Exception e) {
-				logger.info("jsonToken decrypt error.");
-				e.printStackTrace();
-			}
-			/**
-			 * 判断是否认证浏览器
-			 * 混淆信息
-			 */
-			if (SSOConfig.getCookieBrowser()) {
-				if (Browser.isLegalUserAgent(request, tokenAttr[0], tokenAttr[1])) {
-					return tokenAttr[0];
-				} else {
-					/**
-					 * 签名验证码失败
-					 */
-					logger.error("SSOHelper getToken, find Browser is illegal.");
-				}
-			} else {
-				/**
-				 * 不需要认证浏览器信息混淆
-				 * 返回JsonToken
-				 */
-				return tokenAttr[0];
-			}
-		}
-
-		return null;
-	}
 
 	/**
 	 * 获取当前请求 Token
@@ -116,7 +69,7 @@ public class SSOHelper {
 		if (encrypt == null) {
 			throw new KissoException(" Encrypt not for null.");
 		}
-		return checkIp(request, cacheToken(request, encrypt, cache));
+		return KissoHelper.checkIp(request, cacheToken(request, encrypt, cache));
 	}
 
 	/**
@@ -142,7 +95,7 @@ public class SSOHelper {
 		 * 执行以下逻辑
 		 */
 		if (token == null) {
-			String jsonToken = getJsonToken(request, encrypt);
+			String jsonToken = KissoHelper.getJsonToken(request, encrypt, SSOConfig.getCookieName());
 			if (jsonToken == null || "".equals(jsonToken)) {
 				/**
 				 * 未登录请求
@@ -160,33 +113,6 @@ public class SSOHelper {
 				if (SSOConfig.getCookieCache() && cache != null) {
 					cache.set(hashCookie(request), token);
 				}
-			}
-		}
-		return token;
-	}
-
-	/**
-	 * 检查 IP 与登录 IP 是否一致
-	 * <p>
-	 * @param request
-	 * @param token
-	 * 				登录票据
-	 * @return Token
-	 */
-
-	private static Token checkIp(HttpServletRequest request, Token token) {
-		/**
-		 * 判断是否检查 IP 一致性
-		 */
-		if (SSOConfig.getCookieCheckip()) {
-			String ip = IpHelper.getIpAddr(request);
-			if (token != null && ip != null && !ip.equals(token.getUserIp())) {
-				/**
-				 * 检查 IP 与登录IP 不一致返回 null
-				 */
-				logger.info("ip inconsistent! return token null, token userIp:{}, reqIp:{}",
-						new Object[] { token.getUserIp(), ip });
-				return null;
 			}
 		}
 		return token;

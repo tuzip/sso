@@ -32,6 +32,10 @@ public class SSOConstant {
 
 	/**
 	 * Cookie 设置常量
+	 * maxage 介绍：
+	 * -1 浏览器关闭时自动删除
+	 *  0 立即删除
+	 * 120 表示Cookie有效期2分钟(以秒为单位)
 	 */
 	public final static boolean SSO_COOKIE_SECURE = false;
 	public final static boolean SSO_COOKIE_HTTPONLY = true;
@@ -64,4 +68,14 @@ public class SSOConstant {
 	 * 登录相关常量
 	 */
 	public final static String SSO_LOGIN_URL = "sso.github.com";
+	
+	/**
+	 * SSO 跨域相关常量
+	 * maxage 介绍：
+	 * -1 浏览器关闭时自动删除
+	 *  0 立即删除
+	 * 120 表示Cookie有效期2分钟(以秒为单位)
+	 */
+	public final static String SSO_AUTH_COOKIE_NAME = "pid";
+	public final static int SSO_AUTH_COOKIE_MAXAGE = 180;
 }

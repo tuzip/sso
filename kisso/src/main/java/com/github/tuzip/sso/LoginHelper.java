@@ -22,7 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.tuzip.sso.common.Browser;
 import com.github.tuzip.sso.common.CookieHelper;
 import com.github.tuzip.sso.common.util.RandomUtil;
 import com.github.tuzip.sso.common.util.ReflectUtil;
@@ -36,21 +35,7 @@ import com.github.tuzip.sso.exception.KissoException;
  */
 public class LoginHelper {
 	private final static Logger logger = LoggerFactory.getLogger(LoginHelper.class);
-
-	/**
-	 * @Description 防止伪造SESSIONID攻击. 
-	 * 				用户登录校验成功销毁当前JSESSIONID.
-	 * 				创建可信的JSESSIONID
-	 * @param request
-	 * 				当前HTTP请求
-	 * @param value
-	 * 				用户ID等唯一信息
-	 */
-	public static void authJSESSIONID(HttpServletRequest request, String value) {
-		request.getSession().invalidate();
-		request.getSession().setAttribute("KISSO-" + value, true);
-	}
-
+	
 	/**
 	 * @Description 根据Token生成登录信息Cookie 
 	 * @param request
@@ -60,29 +45,10 @@ public class LoginHelper {
 	 * 				对称加密算法类
 	 * @return	Cookie 登录信息Cookie 
 	 */
-	private static Cookie generateCookie(HttpServletRequest request, Token token, Encrypt encrypt) {
-		if (null == token) {
-			return null;
-		}
-
-		/**
-		 * token加密混淆
-		 */
-		String jt = token.jsonToken();
-		StringBuffer sf = new StringBuffer();
-		sf.append(jt);
-		sf.append(SSOConstant.CUT_SYMBOL);
-		/**
-		 * 判断是否认证浏览器信息
-		 * 否取8位随机数混淆
-		 */
-		if (SSOConfig.getCookieBrowser()) {
-			sf.append(Browser.getUserAgent(request, jt));
-		} else {
-			sf.append(RandomUtil.getCharacterAndNumber(8));
-		}
+	private static Cookie generateCookie(HttpServletRequest request,
+			Token token, Encrypt encrypt) {
 		try {
-			Cookie cookie = new Cookie(SSOConfig.getCookieName(), encrypt.encrypt(sf.toString(),
+			Cookie cookie = new Cookie(SSOConfig.getCookieName(), encrypt.encrypt(KissoHelper.encryptCookie(request, token, encrypt),
 					SSOConfig.getSecretKey()));
 			cookie.setPath(SSOConfig.getCookiePath());
 			cookie.setSecure(SSOConfig.getCookieSecure());
@@ -144,7 +110,7 @@ public class LoginHelper {
 	 * @param response
 	 */
 	public static void authSSOCookie(HttpServletRequest request, HttpServletResponse response, Token token) {
-		authJSESSIONID(request, RandomUtil.getCharacterAndNumber(8));
+		CookieHelper.authJSESSIONID(request, RandomUtil.getCharacterAndNumber(8));
 		setSSOCookie(request, response, token);
 	}
 

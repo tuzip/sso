@@ -22,8 +22,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.Security;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Base64;
+import org.bouncycastle.util.encoders.UrlBase64;
+
+import com.github.tuzip.sso.SSOConfig;
 
 /**
  * <p>
@@ -69,6 +74,31 @@ public class Base64Util {
 		return new String(Base64.encode(bytes));
 	}
 
+	/**
+	 * BASE64 encrypt
+	 * 
+	 * @param key
+	 * @return
+	 * @throws Exception
+	 */
+	public static String encryptBASE64(byte[] key) throws Exception {
+		Security.addProvider(new BouncyCastleProvider());
+		byte[] b = UrlBase64.encode(key);
+		return new String(b, SSOConfig.getEncoding());
+	}
+
+	/**
+	 * BASE64 decrypt
+	 * 
+	 * @param key
+	 * @return
+	 * @throws Exception
+	 */
+	public static byte[] decryptBASE64(String key) throws Exception {
+		Security.addProvider(new BouncyCastleProvider());
+		return UrlBase64.decode(key.getBytes(SSOConfig.getEncoding()));
+	}
+	
 	/**
 	 * <p>
 	 * 将文件编码为BASE64字符串
