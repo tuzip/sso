@@ -115,7 +115,7 @@ public class ReflectUtil {
 		 * 默认 TokenCacheMap
 		 */
 		TokenCache tokenCache = null;
-		if("".equals(SSOConfig.getTokenClass())){
+		if("".equals(SSOConfig.getTokenCacheClass())){
 			tokenCache = new TokenCacheMap();
 		} else {
 			try {

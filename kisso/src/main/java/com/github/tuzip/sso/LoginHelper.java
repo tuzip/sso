@@ -48,8 +48,8 @@ public class LoginHelper {
 	private static Cookie generateCookie(HttpServletRequest request,
 			Token token, Encrypt encrypt) {
 		try {
-			Cookie cookie = new Cookie(SSOConfig.getCookieName(), encrypt.encrypt(KissoHelper.encryptCookie(request, token, encrypt),
-					SSOConfig.getSecretKey()));
+			Cookie cookie = new Cookie(SSOConfig.getCookieName(), 
+					KissoHelper.encryptCookie(request, token, encrypt));
 			cookie.setPath(SSOConfig.getCookiePath());
 			cookie.setSecure(SSOConfig.getCookieSecure());
 			cookie.setDomain(SSOConfig.getCookieDomain());
