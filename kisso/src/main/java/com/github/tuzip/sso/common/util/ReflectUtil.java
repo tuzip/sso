@@ -18,13 +18,13 @@ package com.github.tuzip.sso.common.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.tuzip.sso.Encrypt;
 import com.github.tuzip.sso.SSOConfig;
 import com.github.tuzip.sso.SSOToken;
 import com.github.tuzip.sso.Token;
 import com.github.tuzip.sso.TokenCache;
 import com.github.tuzip.sso.TokenCacheMap;
 import com.github.tuzip.sso.common.encrypt.AES;
+import com.github.tuzip.sso.common.encrypt.Encrypt;
 import com.github.tuzip.sso.exception.KissoException;
 
 /**

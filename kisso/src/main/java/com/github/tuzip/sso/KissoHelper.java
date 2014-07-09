@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import com.github.tuzip.sso.common.Browser;
 import com.github.tuzip.sso.common.CookieHelper;
 import com.github.tuzip.sso.common.IpHelper;
+import com.github.tuzip.sso.common.encrypt.Encrypt;
 import com.github.tuzip.sso.common.util.RandomUtil;
 import com.github.tuzip.sso.exception.KissoException;
 

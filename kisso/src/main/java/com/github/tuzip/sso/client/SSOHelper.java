@@ -24,12 +24,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.tuzip.sso.Encrypt;
 import com.github.tuzip.sso.KissoHelper;
 import com.github.tuzip.sso.SSOConfig;
 import com.github.tuzip.sso.Token;
 import com.github.tuzip.sso.TokenCache;
 import com.github.tuzip.sso.common.CookieHelper;
+import com.github.tuzip.sso.common.encrypt.Encrypt;
 import com.github.tuzip.sso.common.util.HttpUtil;
 import com.github.tuzip.sso.common.util.ReflectUtil;
 import com.github.tuzip.sso.exception.KissoException;

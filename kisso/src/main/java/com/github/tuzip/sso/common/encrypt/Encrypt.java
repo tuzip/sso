@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.tuzip.sso;
+package com.github.tuzip.sso.common.encrypt;
 
 /**
  * SSO 对称加密父类
