@@ -34,7 +34,7 @@ import com.github.tuzip.sso.common.encrypt.MD5;
 
 
 /**
- * 文件Hash 帮助类
+ * 文件 Hash 帮助类
  * <p>
  * @author   hubin
  * @Date	 2014-8-11
