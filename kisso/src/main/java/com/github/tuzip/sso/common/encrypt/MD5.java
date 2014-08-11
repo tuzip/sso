@@ -18,6 +18,7 @@ package com.github.tuzip.sso.common.encrypt;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -120,5 +121,15 @@ public class MD5 {
 			hex = "0" + hex;
 		}
 		return hex;
+	}
+	
+	public static String byte2Hex(byte[] bytes) {
+		Formatter formatter = new Formatter();
+		for (byte b : bytes) {
+			formatter.format("%02x", b);
+		}
+		String hash = formatter.toString();
+		formatter.close();
+		return hash;
 	}
 }
