@@ -54,6 +54,19 @@ public class FileHashHelper {
 	public static String getMD5Hash(String fileName) throws NoSuchAlgorithmException, IOException{
 		return getHash(fileName, "MD5");
 	}
+	
+	/**
+	 * 获取文件文件MD5 Hash值
+	 * <p>
+	 * @param InputStream
+	 * 				文件输入流
+	 * @return
+	 * @throws IOException
+	 * @throws NoSuchAlgorithmException
+	 */
+	public static String getMD5Hash(InputStream ins) throws NoSuchAlgorithmException, IOException{
+		return getHash(ins, "MD5");
+	}
 
 	/**
 	 * 获取文件文件Hash值
