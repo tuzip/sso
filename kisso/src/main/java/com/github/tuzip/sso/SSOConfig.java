@@ -44,7 +44,7 @@ public class SSOConfig {
 			try {
 				p.load(in);
 				prop = new PropertiesUtil(p);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				logger.error("read sso.properties error. ", e.toString());
 			}
 		}
