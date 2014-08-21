@@ -15,7 +15,6 @@
  */
 package com.github.tuzip.sso;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
